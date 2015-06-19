@@ -29,15 +29,15 @@ var _fontLetter = [
 ]
 
 function setFontColor(h, s, b, alpha) {
+  if(alpha === undefined)
+    alpha = 100;
   _fontH = h;
   _fontS = s;
   _fontB = b;
   _fontAlpha = alpha;
 }
 
-function setFontColor(h, s, b) {
-  setFontColor(h, s, b, 100);
-}
+
 function setBitFontSize(fontSize) {
   _fontSize = fontSize;
 }
@@ -70,6 +70,7 @@ function bitChar(c, x, y) {
 
 
 function bitText(text, x, y, textWidth, textHeight, padding) {
+    // text = text + "";
   if(padding === undefined){
     bitText(text, x, y, textWidth, textHeight, 0);
     return;
@@ -79,7 +80,7 @@ function bitText(text, x, y, textWidth, textHeight, padding) {
     bitText(text, x, y, 1<<29, 1<<29);
     return;
   }
-  // console.log(x + " " + y);
+
   push();
   rectMode(CORNER);
   translate(x+padding, y+padding);
@@ -104,13 +105,11 @@ function bitTextCenter(text, x, y, textWidth, textHeight){
   
   if(textWidth === undefined){
     textWidth = 0;
-  }
-  
-  if(textHeight === undefined){
     textHeight = 0;
   }
   
   var currFontSize = _fontSize*5;
+  text = text + "";
   bitText(text, parseInt(x + (textWidth - bitTextWidth(text))/2), parseInt( y + (textHeight-currFontSize)/2));
 }
 function bitTextWidth(s) {
