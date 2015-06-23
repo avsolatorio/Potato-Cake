@@ -88,19 +88,19 @@ function draw(){
 		if(index == i){
 			strokeWeight(3);
 			ellipse(nodes[i].x,nodes[i].y,(nodes[i].radius-padding)*2,(nodes[i].radius-padding)*2);	
-			textAlign(CENTER,BOTTOM);
+			textAlign(CENTER,CENTER);
 			textSize(nodes[i].radius/5);
 			strokeWeight(1);
 			fill(0);
-			text(nodes[i].name, nodes[i].x,nodes[i].y,nodes[i].radius*1.8,nodes[i].radius*1.8);
+			text(nodes[i].name, nodes[i].x - nodes[i].radius*.9,nodes[i].y - nodes[i].radius*.9,nodes[i].radius*1.8,nodes[i].radius*1.8);
 		}else{
 			strokeWeight(1);
 			ellipse(nodes[i].x,nodes[i].y,(nodes[i].radius-padding)*2,(nodes[i].radius-padding)*2);	
-			textAlign(CENTER,BOTTOM);
+			textAlign(CENTER,CENTER);
 			textSize(nodes[i].radius/5);
 			noStroke();
 			fill(0);
-			text(nodes[i].name, nodes[i].x,nodes[i].y,nodes[i].radius*1.8,nodes[i].radius*1.8);
+			text(nodes[i].name, nodes[i].x - nodes[i].radius*.9,nodes[i].y - nodes[i].radius*.9,nodes[i].radius*1.8,nodes[i].radius*1.8);
 		}
 	}
 }
