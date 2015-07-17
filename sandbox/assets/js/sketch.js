@@ -12,13 +12,16 @@ function Parameters(){
 
 var p = new Parameters();
 var isReversed = false;
+var isFirst = true;
 
-function Particle(_x,_y) {
+function Particle(_x,_y,flag) {
   this.x = constrain(_x,0, width);
   this.y = max(_y,0);
   var dy = random(-p.spread,p.spread),
       dx = random(-p.spread, p.spread);
-
+  if(flag){
+    dy = dx = 0;
+  }
   this.draw = function(){
     noStroke();
     fill(isReversed ? 0 : 255);
@@ -86,6 +89,12 @@ function Liquid() {
   this.y_value = function(x){
      var left = floor(x*(p.precision-1)/width);
      var right = ceil(x*(p.precision-1)/width);
+     
+     left = constrain(left,0,p.precision-1);
+     right = constrain(right,0,p.precision-1);
+
+     if(left==right) return height - h[left];
+
      var ret = map(x, left*width/(p.precision-1), right*width/(p.precision-1),height - h[left], height - h[right]);
     return ret;
   }
@@ -105,18 +114,18 @@ function Liquid() {
 
      h[left] = min(h[left],height);
      h[right] = min(h[right],height);
-
-     if(height - h[left] < 5)
-      h[left] = height;
-    if(height - h[right] < 5)
-      h[right] = height;
   }
 
   this.isFilled = function(point){
     var i;
-    for(i = 0; i < h.length; i++)
-      if(h[i] < height) return false;
-    return true;
+    var ret = true;
+    for(i = 0; i < h.length; i++){
+      if(height - h[i] > p.size*2)
+        ret = false;
+      // if(height - h[i] <= p.size)
+      //   h[i] = height;
+    }
+    return ret;
   }
 }
 
@@ -130,7 +139,16 @@ function setup() {
 
 function draw() {
   background(!isReversed ? 0 : 255);
-  fill(125);
+  
+  if(isFirst){
+    fill(255);
+    noStroke();
+    textAlign(CENTER,CENTER);
+    rectMode(CENTER);
+    textSize(30);
+    text("sandbox", width/2 , height/2, width, height);
+  }
+
   var temp = [],i;
   l.draw();
   for (i = 0; i < al.length; i++) {
@@ -143,7 +161,13 @@ function draw() {
   
   al = temp;
 
-  if (mouseIsPressed && mouseY < l.y_value(mouseX)) {
+  if (mouseIsPressed && mouseY <= l.y_value(mouseX)) {
+    
+    if(isFirst){
+      sandify();
+      isFirst = false;
+    }
+
     for(i = 0 ; i < p.rate; i++)
       al.push(new Particle(mouseX, mouseY));
   }
@@ -155,4 +179,17 @@ function draw() {
     l = new Liquid();
     isReversed = !isReversed;
   }
+}
+
+function sandify(){
+  var i,j;
+
+  loadPixels();
+  for(i = 150; i < width-150; i+=p.size)
+    for(j = 200; j < 300; j+=p.size){
+      var index = i + j*width;
+      if(pixels[index*4] != 0){
+        al.push(new Particle(i,j,true));
+      }
+    }
 }
