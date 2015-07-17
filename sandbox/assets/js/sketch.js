@@ -147,6 +147,11 @@ function draw() {
     rectMode(CENTER);
     textSize(30);
     text("sandbox", width/2 , height/2, width, height);
+    textSize(10);
+    if(millis() > 1000*10) text("press to play", width/2 , height/2+40, width, height);
+    else text("by pepe berba", width/2 , height/2+40, width, height);
+
+
   }
 
   var temp = [],i;
