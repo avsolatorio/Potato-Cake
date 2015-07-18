@@ -394,7 +394,7 @@ function Star(_size){
 
 function setup() {
   s = [];
-  stars[];
+  stars = [];
   createCanvas(windowWidth, windowHeight);
   colorMode(HSB, 100);
   p = new Parameters();
