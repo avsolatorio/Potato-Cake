@@ -15,7 +15,7 @@ function Parameters(){
   this.meteor_day = true;
   this.prev_time = 100;
   this.slope = 12;
-  this.precision = 80;
+  this.precision = 100;
   this.no_of_layers = random(20,30);
 
   this.speed = .1;
@@ -508,6 +508,8 @@ function setup_controls(){
 }
 
 function make_landscape(){    
+  s = [];
+  stars = [];
   var i,j;
   for(i = p.no_of_layers ; i > 0; i--){
     s.push(new Landscape(i*(height*.7/p.no_of_layers), i));
@@ -752,15 +754,13 @@ function draw() {
   if(millis() > prev + 1000){
     framerate = count;
     count = 0;
-    prev = millis();
-
     if(framerate < 15){
-      delete_rate *= 1.5;
-      for(i = 0; i < delete_rate && stars.length > 0; i++){
-        stars.pop();
-      }
-      console.log("POP " + stars.length);
+      if(p.precision > 10)
+        p.precision /= 2;
+      p.number_of_stars /= 2;
+      make_landscape();
     }
+    prev = millis();
   }
 }
 
