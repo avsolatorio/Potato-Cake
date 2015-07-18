@@ -1,5 +1,4 @@
-var stars = [];
-var s = [];
+var stars,s;
 var ms = null;
 var time_offset = 10000;
 var p;
@@ -394,6 +393,8 @@ function Star(_size){
 }
 
 function setup() {
+  s = [];
+  stars[];
   createCanvas(windowWidth, windowHeight);
   colorMode(HSB, 100);
   p = new Parameters();
