@@ -6,6 +6,7 @@ var p;
 var prev = 0;
 var count = 0;
 var framerate = 0;
+var delete_rate = 10;
 
 var is_first = true;
 
@@ -19,14 +20,14 @@ function Parameters(){
 
   this.speed = .1;
   this.manual_time = false;
-  this.time_selected = 12000;
+  this.time_selected = 1000;
   this.curr_hue = 100;
 
   this.min_offset = 0;
   this.max_offset = height*.7;
 
   //Stars
-  this.number_of_stars = 600;
+  this.number_of_stars = 1000;
   this.min_star_size = 1;
   this.max_star_size = 5;
   this.min_brightness = 10
@@ -363,6 +364,10 @@ function Star(_size){
   r = random(height*.5,1.3*height);
   size = _size
 
+  this.resize = function(k){
+    r *= k;
+  }
+
   this.draw = function(){
 
     var curr = p.get_angle() + theta;
@@ -510,7 +515,7 @@ function make_landscape(){
       s[p.no_of_layers-i].equalize();
   } 
 
-  for(i = p.min_star_size; i <= p.max_star_size; i++)
+  for(i = p.max_star_size; i >= p.min_star_size; i--)
     for(j = 0; j <= p.number_of_stars/(i*i*i); j++)
       stars.push(new Star(i));
 }
@@ -647,6 +652,13 @@ function MeteorShower(_angle){
     return queue.length + draw.length == 0;
   }
 
+  this.resize = function(k){
+    for(var i = 0; i < draw.length; i++)
+      draw[i].resize(k);
+    for(var j = 0; j <  queue.length; j++)
+      queue[j].resize(k);
+  }
+
   function Meteor(source,target,curr_time){
     var trail = [];
 
@@ -681,6 +693,11 @@ function MeteorShower(_angle){
     this.isOut = function() {
       var x = trail[trail.length-1].x;
       return x < 0 || x > width;
+    }
+
+    this.resize = function(k){
+      pos.y *= k;
+      pos.x *= k;
     }
   }
 }
@@ -728,14 +745,23 @@ function draw() {
   for (var i = 0; i < s.length; i++)
     s[i].draw();
 
-  // stroke(100);
-  // noFill();
-  // text("framerate: " + framerate, 20, 20);
-  // if(millis() > prev + 1000){
-  //   framerate = count;
-  //   count = 0;
-  //   prev = millis();
-  // }
+  stroke(100);
+  noFill();
+  count++;
+  text("framerate: " + framerate, 20, 20);
+  if(millis() > prev + 1000){
+    framerate = count;
+    count = 0;
+    prev = millis();
+
+    if(framerate < 15){
+      delete_rate *= 1.5;
+      for(i = 0; i < delete_rate && stars.length > 0; i++){
+        stars.pop();
+      }
+      console.log("POP " + stars.length);
+    }
+  }
 }
 
 // function mousePressed(){
@@ -747,7 +773,12 @@ function draw() {
 // }
 
 function windowResized() {
+  var k = windowHeight/height;
   for(var i = 0; i < s.length; i++)
-    s[i].resize(windowHeight/height);
+    s[i].resize(k);
+
+  if(ms) ms.resize(k)
+  for (var j = 0; j < stars.length; j++)
+    stars[j].resize(k);
   resizeCanvas(windowWidth, windowHeight);
 }
