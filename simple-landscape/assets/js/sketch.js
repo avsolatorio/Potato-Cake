@@ -750,7 +750,7 @@ function draw() {
   noFill();
   count++;
   
-  if(millis() > prev + 1000){
+  if(millis() > prev + 1000 && millis() > 2000){
     framerate = count;
     count = 0;
     if(framerate < 10){
@@ -773,6 +773,7 @@ function draw() {
 
   if(has_adjusted){
     rectMode(CORNER);
+    textSize(10);
       text("It looks like your device's browser can't handle the simple landscape. Reducing complexity. Try viewing this on a laptop. Sorry :(", 20, 20, 200,200);      
 
     }
