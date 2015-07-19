@@ -750,7 +750,7 @@ function draw() {
   noFill();
   count++;
   
-  if(millis() > prev + 1000 && millis() > 2000){
+  if(millis() > prev + 1000 && millis() > 5000){
     framerate = count;
     count = 0;
     if(framerate < 10){
