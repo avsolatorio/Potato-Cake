@@ -9,6 +9,7 @@ var framerate = 0;
 var delete_rate = 10;
 
 var is_first = true;
+var has_adjusted = false;
 
 function Parameters(){
   this.lock = false;
@@ -27,7 +28,7 @@ function Parameters(){
   this.max_offset = height*.7;
 
   //Stars
-  this.number_of_stars = 1000;
+  this.number_of_stars = 600;
   this.min_star_size = 1;
   this.max_star_size = 5;
   this.min_brightness = 10
@@ -398,8 +399,6 @@ function Star(_size){
 }
 
 function setup() {
-  s = [];
-  stars = [];
   createCanvas(windowWidth, windowHeight);
   colorMode(HSB, 100);
   p = new Parameters();
@@ -518,7 +517,7 @@ function make_landscape(){
   } 
 
   for(i = p.max_star_size; i >= p.min_star_size; i--)
-    for(j = 0; j <= p.number_of_stars/(i*i*i); j++)
+    for(j = 0; j <= p.number_of_stars/(i*i); j++)
       stars.push(new Star(i));
 }
 
@@ -750,18 +749,33 @@ function draw() {
   stroke(100);
   noFill();
   count++;
-  text("framerate: " + framerate, 20, 20);
+  
   if(millis() > prev + 1000){
     framerate = count;
     count = 0;
-    if(framerate < 15){
-      if(p.precision > 10)
+    if(framerate < 10){
+      has_adjusted = true;
+      if(p.precision > 20){
         p.precision /= 2;
-      p.number_of_stars /= 2;
-      make_landscape();
-    }
+        p.number_of_stars /= 2;
+         make_landscape();
+      }else{
+        p.number_of_stars /= 2;
+        stars = [];
+        for(i = p.max_star_size; i >= p.min_star_size; i--)
+          for(j = 0; j <= p.number_of_stars/(i*i); j++)
+            stars.push(new Star(i));
+
+      }
+    }else has_adjusted = false;
     prev = millis();
   }
+
+  if(has_adjusted){
+    rectMode(CORNER);
+      text("It looks like your device's browser can't handle the simple landscape. Reducing complexity. Try viewing this on a laptop. Sorry :(", 20, 20, 200,200);      
+
+    }
 }
 
 // function mousePressed(){
