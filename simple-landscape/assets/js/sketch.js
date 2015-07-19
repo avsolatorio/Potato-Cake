@@ -750,33 +750,21 @@ function draw() {
   noFill();
   count++;
   
-  if(millis() > prev + 1000 && millis() > 5000){
-    framerate = count;
-    count = 0;
-    if(framerate < 10){
-      has_adjusted = true;
-      if(p.precision > 20){
-        p.precision /= 2;
-        p.number_of_stars /= 2;
-         make_landscape();
-      }else{
-        p.number_of_stars /= 2;
-        stars = [];
-        for(i = p.max_star_size; i >= p.min_star_size; i--)
-          for(j = 0; j <= p.number_of_stars/(i*i); j++)
-            stars.push(new Star(i));
+  // if(millis() > prev + 1000 && millis() > 5000){
+  //   framerate = count;
+  //   count = 0;
+  //   if(framerate < 10 && p.number_of_stars > 300){
+  //       p.number_of_stars /= 2;
+  //       var temp = 0,i,j;
+  //       for(i = p.max_star_size; i >= p.min_star_size; i--)
+  //         temp += p.number_of_stars/(i*i);
 
-      }
-    }else has_adjusted = false;
-    prev = millis();
-  }
+  //       for(i = 0; i <= temp; i++)
+  //           stars.push();
+  //   }
 
-  if(has_adjusted){
-    rectMode(CORNER);
-    textSize(10);
-      text("It looks like your device's browser can't handle the simple landscape. Reducing complexity. Try viewing this on a laptop. Sorry :(", 20, 20, 200,200);      
-
-    }
+  //   prev = millis();
+  // }
 }
 
 // function mousePressed(){
